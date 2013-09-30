@@ -8,7 +8,6 @@ shinyUI(pageWithSidebar(
     radioButtons("dist", "Parent distribution (population):",
                  list("Normal" = "rnorm",
                       "Right skewed" = "rexp",
-                      "Left skewed" = "rbeta",
                       "Uniform" = "runif")),
         
     sliderInput("n", 
@@ -26,6 +25,6 @@ shinyUI(pageWithSidebar(
     actionButton("goButton", "Go!")),
 
   mainPanel(
-    plotOutput("plot", height="900px")
+    plotOutput("plot", height="800px")
   )
 ))

@@ -6,12 +6,7 @@ shinyServer(function(input, output) {
   
   data <- reactive({
     if(input$goButton > 0 | TRUE) {
-    if (input$dist == "rbeta") {
-      vals <-  do.call(input$dist, list(n=input$n, shape1=5, shape2=1))
-    } else {
       vals <-  do.call(input$dist, list(n=input$n))
-    }
-    
     
     return (list(fun=input$dist, vals=vals))
     }
@@ -21,7 +16,6 @@ shinyServer(function(input, output) {
     distname <- switch(input$dist,
                        rnorm = "Normal population",
                        rexp = "Right skewed population",
-                       rbeta = "Left skewed population",
                        runif = "Uniform population")   
     n <- input$n
     k <- input$k
@@ -29,14 +23,9 @@ shinyServer(function(input, output) {
 
     
     
-    if (input$dist == "rbeta") {
-      x = replicate(k, do.call(input$dist, list(n=n,shape1=5,shape2=1)))
-      pop = do.call(input$dist, list(n=1e5,shape1=5,shape2=1))
-    } else {
-      x = replicate(k, do.call(input$dist, list(n=n)))
-      pop = do.call(input$dist, list(n=1e5))
-    }
-    
+    x = replicate(k, do.call(input$dist, list(n=n)))
+    pop = do.call(input$dist, list(n=1e5))
+  
     m_pop =  round(mean(pop),2)
     sd_pop = round(sd(pop),2)
     
@@ -53,11 +42,7 @@ shinyServer(function(input, output) {
       if(input$dist == "rexp"){
         limx <- c(0, 5)
       } else {
-        if(input$dist == "runif"){
           limx <- c(0, 1)
-        } else {
-          limx <- c(0, 1)
-        }
       }
     }
     
