@@ -17,7 +17,7 @@ shinyUI(pageWithSidebar(
     
     checkboxInput("normcurve", "Draw Normal Curve", FALSE),
     
-    submitButton("Update View")),
+    actionButton("goButton", "Go!")),
   
   mainPanel(
     plotOutput("plot", height="600px")

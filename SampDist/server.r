@@ -9,8 +9,10 @@ shinyServer(function(input, output) {
   
   # Computing proportion of orange candies
   dataset <- reactive({
+    if(input$goButton > 0 | TRUE) {
     data.frame(prob = rbinom(n = input$numsamp, size = input$sampsize, 
                     prob = input$popvalue)/input$sampsize)
+    }
   })
   
   output$plot <- renderPlot({
