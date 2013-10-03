@@ -33,7 +33,7 @@ shinyServer(function(input, output) {
     # Building histogram of sampling distribution
     p <- ggplot(confnums, aes(y = means, x = x, ymax = ub, ymin = lb, 
                               color = factor(containMean))) 
-    p <- p + geom_pointrange(size = .75) + theme_bw() + 
+    p <- p + geom_pointrange(size = .75) + theme_bw(base_size = 24) + 
       scale_color_manual("", values = c("red", "forestgreen")) + 
       theme(legend.position = "none") +
       geom_hline(yintercept = input$popmean, size = 1) + 
