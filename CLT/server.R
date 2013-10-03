@@ -52,18 +52,20 @@ shinyServer(function(input, output) {
     phist=hist(pop, plot=FALSE)
     hist(pop, main=paste(distname, " (mean = ", m_pop, ", SD = ", sd_pop, ")", sep=""), 
          xlab="", freq=FALSE, ylim=c(0, max(pdens$y, phist$density)),
-         col="steelblue", xlim = limx)
+         col="steelblue", xlim = limx, cex.lab=1.5, cex.axis=1.5, cex.main=1.5,
+         cex.sub=1.5)
     lines(pdens, col="darkgreen", lwd=3)
     box()
     
     ndens=density(ndist)
     nhist=hist(ndist, plot=FALSE)
-    hist(ndist, main=paste("Distribution of means of ", k, 
+    hist(ndist, main=paste("Sampling Distribution of ", k, 
                            " random samples, each\nconsisting of ", n, 
                            " observations from a ", distname,
                            "\n(mean = ", m_samp, ", SE = ", sd_samp, ")", sep=""), 
          xlab="Sample means", freq=FALSE, ylim=c(0, max(ndens$y, nhist$density)),
-         col="steelblue", xlim = limx)
+         col="steelblue", xlim = limx, cex.lab=1.5, cex.axis=1.5, cex.main=1.5,
+         cex.sub=1.5)
     lines(ndens, col="darkgreen", lwd=3)
     box()
   
