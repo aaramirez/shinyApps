@@ -16,8 +16,9 @@ shinyServer(function(input, output) {
   })
   
   output$plot <- renderPlot({
-    
+    input$goButton
     # compute means and sd for data
+    isolate({
     confnums <- data.frame(means = apply(dataset(), 2, mean),
                            se = apply(dataset(), 2, sd)/sqrt(input$sampsize))
     
@@ -44,7 +45,7 @@ shinyServer(function(input, output) {
                          round(mean(confnums$containMean)*100, 0), "%"))
     
     print(p)
-    
+    })
   })
   
 })

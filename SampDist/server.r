@@ -16,7 +16,8 @@ shinyServer(function(input, output) {
   })
   
   output$plot <- renderPlot({
-    
+    input$goButton
+    isolate({
     rangeC <- max(dataset()$prob) - min(dataset()$prob)
     
     if(input$normcurve) {
@@ -47,7 +48,7 @@ shinyServer(function(input, output) {
       
       print(p)
     }
-        
+    })   
   })
   
 })
