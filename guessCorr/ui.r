@@ -11,7 +11,6 @@ shinyUI(pageWithSidebar(
     br(),
     checkboxInput('bestfit', 'Show line of best fit', value = FALSE),
     br(),
-    br(),
     checkboxInput("restrict", "Restriction of Range"),
     conditionalPanel(condition = "input.restrict == true",
                      sliderInput("x_range", "Range:",
