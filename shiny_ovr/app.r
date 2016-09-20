@@ -2,9 +2,12 @@ library(shiny)
 library(shinydashboard)
 library(DT)
 library(ggplot2)
+library(gridExtra)
+
 source('guesscorr.r')
 source('ci.r')
 source('sampdist.r')
+source('clt.r')
 
 ui <- dashboardPage(skin = 'yellow',
         dashboardHeader(),
@@ -30,10 +33,10 @@ ui <- dashboardPage(skin = 'yellow',
             ),
             tabItem(tabName = 'guesscorr',
               guesscorr_ui('guesscorr_input')
+            ),
+            tabItem(tabName = 'clt',
+              clt_ui('clt_input')
             )
-            # tabItem(tabName = 'clt',
-            #   clt_ui('clt_input')
-            # )
           )
         )
   
@@ -43,7 +46,7 @@ server <- function(input, output, session) {
   callModule(ci_module, 'ci_input')
   callModule(sampdist_module, 'sampdist_input')
   callModule(guesscorr_module, 'guesscorr_input')
-  # callModule(clt_module, 'clt_input')
+  callModule(clt_module, 'clt_input')
 }
 
 shinyApp(ui, server)
