@@ -3,6 +3,7 @@ library(shinydashboard)
 library(DT)
 library(ggplot2)
 source('guesscorr.r')
+source('ci.r')
 
 ui <- dashboardPage(skin = 'yellow',
         dashboardHeader(),
@@ -20,9 +21,9 @@ ui <- dashboardPage(skin = 'yellow',
         ),
         dashboardBody(
           tabItems(
-            # tabItem(tabName = 'ci',
-            #   ci_ui('ci_input')
-            # ),
+            tabItem(tabName = 'ci',
+              ci_ui('ci_input')
+            ),
             # tabItem(tabName = 'sampdist',
             #   sampdist_ui('sampdist_input')
             # ),
@@ -38,7 +39,7 @@ ui <- dashboardPage(skin = 'yellow',
 )
 
 server <- function(input, output, session) {
-  # callModule(ci_module, 'ci_input')
+  callModule(ci_module, 'ci_input')
   # callModule(sampdist_module, 'sampdist_input')
   callModule(guesscorr_module, 'guesscorr_input')
   # callModule(clt_module, 'clt_input')
