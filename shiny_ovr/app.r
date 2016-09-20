@@ -4,6 +4,7 @@ library(DT)
 library(ggplot2)
 source('guesscorr.r')
 source('ci.r')
+source('sampdist.r')
 
 ui <- dashboardPage(skin = 'yellow',
         dashboardHeader(),
@@ -24,9 +25,9 @@ ui <- dashboardPage(skin = 'yellow',
             tabItem(tabName = 'ci',
               ci_ui('ci_input')
             ),
-            # tabItem(tabName = 'sampdist',
-            #   sampdist_ui('sampdist_input')
-            # ),
+            tabItem(tabName = 'sampdist',
+              sampdist_ui('sampdist_input')
+            ),
             tabItem(tabName = 'guesscorr',
               guesscorr_ui('guesscorr_input')
             )
@@ -40,7 +41,7 @@ ui <- dashboardPage(skin = 'yellow',
 
 server <- function(input, output, session) {
   callModule(ci_module, 'ci_input')
-  # callModule(sampdist_module, 'sampdist_input')
+  callModule(sampdist_module, 'sampdist_input')
   callModule(guesscorr_module, 'guesscorr_input')
   # callModule(clt_module, 'clt_input')
 }

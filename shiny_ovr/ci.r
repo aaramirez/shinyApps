@@ -30,17 +30,12 @@ ci_ui <- function(id) {
 
 ci_module <- function(input, output, session) {
   # Computing proportion of orange candies
-  dataset <- reactive({
-    if(input$goButton > 0 | TRUE) {
+  dataset <- eventReactive(input$goButton, {
       replicate(input$numsamp, 
                 rnorm(n = input$sampsize, mean = input$popmean, sd = input$popsd))
-    }
   })
   
   output$plot <- renderPlot({
-    input$goButton
-    # compute means and sd for data
-    isolate({
       confnums <- data.frame(means = apply(dataset(), 2, mean),
                              se = apply(dataset(), 2, sd)/sqrt(input$sampsize))
       
@@ -67,6 +62,5 @@ ci_module <- function(input, output, session) {
                            round(mean(confnums$containMean)*100, 0), "%"))
       
       print(p)
-    })
   })
 }
