@@ -14,7 +14,7 @@ ci_ui <- function(id) {
           numericInput(ns("popsd"), "Parameter SD:", 1),
           numericInput(ns("sampsize"), "Sample Size:", 25),
           numericInput(ns("numsamp"), "Number of Samples:", 100),
-          br(),
+          hr(),
           sliderInput(ns("conflevel"), "Confidence Level", min = 0, max = 1, 
                       value = .95, step = .01), 
           

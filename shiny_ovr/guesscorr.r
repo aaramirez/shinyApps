@@ -7,32 +7,25 @@ guesscorr_ui <- function(id){
   div(
     h2("Guessing Correlations"),
     fluidRow(
-      box(title = 'Generate Data', status = 'primary',
-          width = 12, collapsible = TRUE, collapsed = FALSE,
-          actionButton(ns('sim'), 'Generate Data')
-      ),
-      box(title = 'Input Correlation Guess', status = 'info',
+      box(title = 'Data Options', status = 'info',
+          width = 4, collapsible = TRUE, collapsed = FALSE,
+          actionButton(ns('sim'), 'Generate Data'),
+          hr(),
           numericInput(ns('guess'), 'Estimated Correlation:', 0),
-          actionButton(ns('submit'), 'Submit Guess')
-      ),
-      box(title = 'Plot Options', status = 'info',
-          checkboxInput(ns('bestfit'), 'Show line of best fit', value = FALSE)
-      ),
-      box(title = 'Advanced Topics', status = 'warning',
+          actionButton(ns('submit'), 'Submit Guess'),
+          hr(),
+          checkboxInput(ns('bestfit'), 'Show line of best fit', value = FALSE),
+          hr(),
           checkboxInput(ns("restrict"), "Restriction of Range"),
           conditionalPanel(condition = sprintf("input['%s'] != ''", ns("restrict")),
                            sliderInput(ns("x_range"), "Range:",
                                        min = -3, max = 3, step = .25, value = c(-1, 2)),
-                           checkboxInput(ns('fitrestrict'), 'Restricted range best fit', value = FALSE))
-      )
-    ),
-    fluidRow(
+                           checkboxInput(ns('fitrestrict'), 'Restricted range best fit', value = FALSE)),
       h4('Guess the correlation from the scatterplot.  Add the line of best fit to the scatterplot
        to help aid in guessing the correlation.')
     ),
-    fluidRow(
-      box(title = 'Plot Ouput', status = 'primary',
-          width = 12,
+      box(title = 'Plot Output', status = 'primary',
+          width = 8,
           verbatimTextOutput(ns('corrvalue')),
           # verbatimTextOutput(ns('data')),
           plotOutput(ns('plot'), height = '600px')
