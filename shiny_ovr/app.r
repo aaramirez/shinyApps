@@ -1,9 +1,11 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(ggplot2)
+source('guesscorr.r')
 
 ui <- dashboardPage(skin = 'yellow',
-        dashboardHeader(
+        dashboardHeader(),
           dashboardSidebar(
             sidebarMenu(
               menuItem('Confidence Interval', tabName = 'ci',
@@ -14,33 +16,32 @@ ui <- dashboardPage(skin = 'yellow',
                        icon = icon('line-chart')),
               menuItem('Central Limit Theorem', tabName = 'clt',
                        icon = icon('bar-chart'))
-            )
           )
         ),
         dashboardBody(
           tabItems(
-            tabItem(tabName = 'ci',
-              ci_ui('ci_input')
-            ),
-            tabItem(tabName = 'sampdist',
-              sampdist_ui('sampdist_input')
-            ),
+            # tabItem(tabName = 'ci',
+            #   ci_ui('ci_input')
+            # ),
+            # tabItem(tabName = 'sampdist',
+            #   sampdist_ui('sampdist_input')
+            # ),
             tabItem(tabName = 'guesscorr',
               guesscorr_ui('guesscorr_input')
-            ),
-            tabItem(tabName = 'clt',
-              clt_ui('clt_input')
             )
+            # tabItem(tabName = 'clt',
+            #   clt_ui('clt_input')
+            # )
           )
         )
   
 )
 
 server <- function(input, output, session) {
-  callModule(ci_module, 'ci_input')
-  callModule(sampdist_module, 'sampdist_input')
+  # callModule(ci_module, 'ci_input')
+  # callModule(sampdist_module, 'sampdist_input')
   callModule(guesscorr_module, 'guesscorr_input')
-  callModule(clt_module, 'clt_input')
+  # callModule(clt_module, 'clt_input')
 }
 
 shinyApp(ui, server)
