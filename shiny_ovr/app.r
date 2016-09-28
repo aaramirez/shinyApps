@@ -1,14 +1,16 @@
 library(shiny)
 library(shinydashboard)
-# library(DT)
+library(DT)
 library(ggplot2)
 library(gridExtra)
 library(dplyr)
+library(highcharter)
 
 source('guesscorr.r')
 source('ci.r')
 source('sampdist.r')
 source('clt.r')
+source('hist.r')
 
 ui <- dashboardPage(skin = 'yellow',
         dashboardHeader(),
@@ -21,6 +23,8 @@ ui <- dashboardPage(skin = 'yellow',
               menuItem('Guessing Correlations', tabName = 'guesscorr',
                        icon = icon('line-chart')),
               menuItem('Central Limit Theorem', tabName = 'clt',
+                       icon = icon('bar-chart')),
+              menuItem('Histograms', tabName = 'hist',
                        icon = icon('bar-chart'))
           )
         ),
@@ -37,6 +41,9 @@ ui <- dashboardPage(skin = 'yellow',
             ),
             tabItem(tabName = 'clt',
               clt_ui('clt_input')
+            ),
+            tabItem(tabName = 'hist',
+              hist_ui('hist_input')
             )
           )
         )
@@ -48,6 +55,7 @@ server <- function(input, output, session) {
   callModule(sampdist_module, 'sampdist_input')
   callModule(guesscorr_module, 'guesscorr_input')
   callModule(clt_module, 'clt_input')
+  callModule(hist_module, 'hist_input')
 }
 
 shinyApp(ui, server)
