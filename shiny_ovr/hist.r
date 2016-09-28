@@ -10,12 +10,20 @@ hist_ui <- function(id) {
       box(title = 'Data Options', status = 'info',
           width = 4, collapsible = TRUE, collapsed = FALSE,
           selectInput(ns("dataset"), "Choose a dataset:", 
-                      choices = c("rock", "pressure", "diamonds", "pokemon"))
+                      choices = c("rock", "pressure", "diamonds", "pokemon")),
+          sliderInput('binwidth', label = 'Select Binwidth')
       ),
-      box(title = 'Plot Output', status = 'primary',
-        width = 8,
-        dataTableOutput(ns('table'))
+      column(width = 8,
+             box(title = 'Plot Output', status = 'info',
+                 collapsible = TRUE, collapsed = FALSE,
+                 dataTableOutput(ns('table'))
+             ),
+             box(title = 'Plot Output', status = 'primary',
+                 collapsible = TRUE, collapsed = FALSE,
+                 plotOutput(ns('plot'), height = '600px')
+             )
       )
+      
     )
   )
   
@@ -32,6 +40,13 @@ hist_module <- function(input, output, session) {
            "pokemon" = pokemon)
   })
   
-  output$table <- renderDataTable(data_input())
+  output$table <- renderDataTable({
+    data_input()
+  })
+  
+  output$plot <- renderPlot({
+    ggplot(input$dataset, aes(x = input$variable)) + theme_bw(base_size = 20) + 
+      geom_histogram()
+  })
   
 }
