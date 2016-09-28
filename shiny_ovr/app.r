@@ -3,6 +3,7 @@ library(shinydashboard)
 # library(DT)
 library(ggplot2)
 library(gridExtra)
+library(dplyr)
 
 source('guesscorr.r')
 source('ci.r')

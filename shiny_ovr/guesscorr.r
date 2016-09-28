@@ -21,17 +21,17 @@ guesscorr_ui <- function(id){
                            sliderInput(ns("x_range"), "Range:",
                                        min = -3, max = 3, step = .25, value = c(-1, 2)),
                            checkboxInput(ns('fitrestrict'), 'Restricted range best fit', value = FALSE)),
-      h4('Guess the correlation from the scatterplot.  Add the line of best fit to the scatterplot
-       to help aid in guessing the correlation.')
-    ),
+          h4('Guess the correlation from the scatterplot.  Add the line of best fit to the scatterplot
+             to help aid in guessing the correlation.')
+          ),
       box(title = 'Plot Output', status = 'primary',
           width = 8,
           verbatimTextOutput(ns('corrvalue')),
           # verbatimTextOutput(ns('data')),
           plotOutput(ns('plot'), height = '600px')
       )
+      )
     )
-  )
 }
 
 guesscorr_module <- function(input, output, session) {
@@ -49,11 +49,8 @@ guesscorr_module <- function(input, output, session) {
     dataMat2 <- data.frame(dataMat %*% chol(mat))
     names(dataMat2) <- c("X", "Y")
     
+    dataMat2$outside <- 0
     
-    if(input$restrict == TRUE){ 
-      dataMat2$outside <- ifelse(dataMat2$X > max(input$x_range) | dataMat2$X < min(input$x_range), 
-                                 0, 1)
-    }
     return(dataMat2)
   })
   
@@ -62,9 +59,14 @@ guesscorr_module <- function(input, output, session) {
     return(as.numeric(corData))
   })
   
+  dat3 <- reactive({
+    dataMat2() %>%
+      mutate(outside = ifelse(X < max(input$x_range) & X > min(input$x_range), 1, 0))
+  })
+  
   corDataRest <- reactive({
     if(input$restrict == TRUE){
-      corDataRest <- cor(subset(dataMat2(), outside == 1))[1,2]
+      corDataRest <- cor(filter(dat3(), outside == 1))[1,2]
       return(as.numeric(corDataRest))
     }
   })
@@ -79,7 +81,8 @@ guesscorr_module <- function(input, output, session) {
     }
     
     if(input$restrict == TRUE){
-      #p <- ggplot(dataMat2(), aes(x = X, y = Y))
+      p <- ggplot(dat3(), aes(x = X, y = Y))
+      p <- p + theme_bw(base_size = 24) + geom_point() + coord_fixed()
       p <- p + geom_vline(xintercept = input$x_range, linetype = "dashed") +
         geom_point(aes(color = factor(outside))) + 
         scale_color_manual(values = c("gray80", "black")) + theme(legend.position = "none") 
@@ -91,7 +94,7 @@ guesscorr_module <- function(input, output, session) {
                           label = paste("r = ", as.character(round(as.numeric(corData()), 3)), sep =""))
       }
       if(input$fitrestrict == TRUE){
-        p <- p + stat_smooth(data = subset(dataMat2(), outside == 1), 
+        p <- p + stat_smooth(data = subset(dat3(), outside == 1), 
                              method = lm, se = FALSE, size = 1.5, color = "darkgreen")
       }
     }
