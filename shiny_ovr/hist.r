@@ -16,11 +16,21 @@ hist_ui <- function(id) {
                  uiOutput(ns('vars')),
                  hr(),
                  sliderInput(ns('binwidth'), label = 'Select Binwidth',
-                             min = 1, max = 100, value = 5, step = 1)
+                             min = 1, max = 100, value = 5, step = 1),
+                 hr(),
+                 checkboxInput(ns('interact'), 'Interactive Plot?', 
+                               value = FALSE)
              ),
              box(title = 'Plot Output', status = 'primary',
                  width = 8, collapsible = TRUE, collapsed = FALSE,
-                 plotOutput(ns('plot'), height = '600px')
+                 conditionalPanel(
+                   condition = sprintf("input['%s'] == ''", ns("interact")),
+                   plotOutput(ns('plot'), height = '600px')
+                 ),
+                 conditionalPanel(
+                   condition = sprintf("input['%s'] != ''", ns("interact")),
+                   highchartOutput(ns('highbar'))
+                 )
              )
       ),
       fluidRow(
@@ -57,6 +67,30 @@ hist_module <- function(input, output, session) {
     ggplot(data_input(), aes_string(input$x_vars)) + 
       theme_bw(base_size = 20) + 
       geom_histogram(binwidth = input$binwidth)
+  })
+  
+  data_count <- reactive({
+    tmp <- data_input()[input$x_var]
+    tmp_min <- min(tmp)
+    tmp_max <- max(tmp)
+    bins <- seq(tmp_min:tmp_max, by = input$binwidth)
+    if(!any(bins != tmp_max)) {
+      bins <- c(bins, tmp_max)
+    }
+    
+    h <- hist(tmp, breaks = bins, plot = FALSE, right = FALSE)
+    
+    as.data.frame(breaks = h$breaks[-1], n = h$counts)
+  })
+  
+  output$highbar <- renderHighchart({
+    highchart() %>%
+      hc_add_series_df(data = data_count(), type = 'column',
+                       y = n, x = breaks) %>%
+      hc_plotOptions(
+        column = list(groupPadding = 0, pointPadding = 0, 
+                   borderWidth = 0, shadow = FALSE)
+      )
   })
   
 }
