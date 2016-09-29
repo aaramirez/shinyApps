@@ -7,24 +7,28 @@ hist_ui <- function(id) {
   div(
     h2('Exploring Histograms'),
     fluidRow(
-      box(title = 'Data Options', status = 'info',
-          width = 4, collapsible = TRUE, collapsed = FALSE,
-          selectInput(ns("dataset"), "Choose a dataset:", 
-                      choices = c("rock", "pressure", "diamonds", "pokemon")),
-          sliderInput('binwidth', label = 'Select Binwidth')
-      ),
-      column(width = 8,
-             box(title = 'Plot Output', status = 'info',
-                 collapsible = TRUE, collapsed = FALSE,
-                 dataTableOutput(ns('table'))
+             box(title = 'Data Options', status = 'info', 
+                 width = 4, collapsible = TRUE, collapsed = FALSE,
+                 selectInput(ns("dataset"), "Choose a dataset:", 
+                             choices = c("rock", "pressure", "diamonds", "pokemon"),
+                             selected = 'pokemon'),
+                 hr(),
+                 uiOutput(ns('vars')),
+                 hr(),
+                 sliderInput(ns('binwidth'), label = 'Select Binwidth',
+                             min = 1, max = 100, value = 5, step = 1)
              ),
              box(title = 'Plot Output', status = 'primary',
-                 collapsible = TRUE, collapsed = FALSE,
+                 width = 8, collapsible = TRUE, collapsed = FALSE,
                  plotOutput(ns('plot'), height = '600px')
              )
+      ),
+      fluidRow(
+        box(title = 'Data Table', status = 'info', solidHeader = TRUE,
+            width = 12, collapsible = TRUE, collapsed = FALSE,
+            dataTableOutput(ns('table'))
+        )
       )
-      
-    )
   )
   
 }
@@ -40,13 +44,19 @@ hist_module <- function(input, output, session) {
            "pokemon" = pokemon)
   })
   
+  output$vars <- renderUI({
+    selectInput(session$ns('x_vars'), 'Select X Variable',
+                choices = names(data_input()))
+  })
+  
   output$table <- renderDataTable({
     data_input()
   })
   
   output$plot <- renderPlot({
-    ggplot(input$dataset, aes(x = input$variable)) + theme_bw(base_size = 20) + 
-      geom_histogram()
+    ggplot(data_input(), aes_string(input$x_vars)) + 
+      theme_bw(base_size = 20) + 
+      geom_histogram(binwidth = input$binwidth)
   })
   
 }
