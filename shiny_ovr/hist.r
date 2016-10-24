@@ -38,7 +38,21 @@ hist_ui <- function(id) {
             width = 12, collapsible = TRUE, collapsed = FALSE,
             dataTableOutput(ns('table'))
         )
-      )
+      ),
+    fluidRow(
+      box(title = 'Questions', status = 'warning', solidHeader = TRUE,
+          width = 12, collapsible = TRUE, collapsed = TRUE, 
+          textInput('id', 'Enter ID', ''),
+          sliderInput('rate_app', 'How easy was the app to use?', min = 1, max = 7, 
+                      value = 1, step = 1),
+          radioButtons('clarify1', 'What effect did reducing the number of bins have on the shape of the histogram?', 
+                       choices = list('More difficult to determine' = 1, 'Easier to determine' = 2, 
+                                      'Became more skewed' = 3)),
+          radioButtons('bins_val', 'Is it possible to identify individual points within the histogram?',
+                       choices = list('Yes' = 1, 'No' = 2)),
+          actionButton('submit_responses', 'Submit Responses')
+          )
+    )
   )
   
 }
@@ -92,5 +106,28 @@ hist_module <- function(input, output, session) {
                    borderWidth = 0, shadow = FALSE)
       )
   })
+  
+  formData <- reactive({
+    data <- sapply(fieldsAll, function(x) input[[x]])
+    data <- c(data, timestamp = epochTime())
+    data <- t(data)
+    data
+  })
+  
+  saveData <- function(data) {
+    fileName <- sprintf("%s_%s.csv",
+                        humanTime(),
+                        digest::digest(data))
+    
+    write.csv(x = data, file = file.path(responsesDir, fileName),
+              row.names = FALSE, quote = TRUE)
+  }
+  
+  # action to take when submit button is pressed
+  observeEvent(input$submit_responses, {
+    saveData(formData())
+  })
+  
+  humanTime <- function() format(Sys.time(), "%Y%m%d-%H%M%OS")
   
 }

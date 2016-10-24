@@ -12,6 +12,12 @@ source('sampdist.r')
 source('clt.r')
 source('hist.r')
 
+fieldsAll <- c('id', 'rate_app', 'clarify1', 'bins_val')
+responsesDir <- file.path("responses")
+epochTime <- function() {
+  as.integer(Sys.time())
+}
+
 ui <- dashboardPage(skin = 'yellow',
         dashboardHeader(),
           dashboardSidebar(
