@@ -1,5 +1,11 @@
 # Histogram application
 
+fieldsAll <- c('id', 'rate_app', 'clarify1', 'bins_val')
+responsesDir <- file.path("responses")
+epochTime <- function() {
+  as.integer(Sys.time())
+}
+
 hist_ui <- function(id) {
   # Create a namespace function using the provided id
   ns <- NS(id)
@@ -42,15 +48,15 @@ hist_ui <- function(id) {
     fluidRow(
       box(title = 'Questions', status = 'warning', solidHeader = TRUE,
           width = 12, collapsible = TRUE, collapsed = TRUE, 
-          textInput('id', 'Enter ID', ''),
-          sliderInput('rate_app', 'How easy was the app to use?', min = 1, max = 7, 
+          textInput(ns('id'), 'Enter ID', ''),
+          sliderInput(ns('rate_app'), 'How easy was the app to use?', min = 1, max = 7, 
                       value = 1, step = 1),
-          radioButtons('clarify1', 'What effect did reducing the number of bins have on the shape of the histogram?', 
+          radioButtons(ns('clarify1'), 'What effect did reducing the number of bins have on the shape of the histogram?', 
                        choices = list('More difficult to determine' = 1, 'Easier to determine' = 2, 
                                       'Became more skewed' = 3)),
-          radioButtons('bins_val', 'Is it possible to identify individual points within the histogram?',
+          radioButtons(ns('bins_val'), 'Is it possible to identify individual points within the histogram?',
                        choices = list('Yes' = 1, 'No' = 2)),
-          actionButton('submit_responses', 'Submit Responses')
+          actionButton(ns('submit_responses'), 'Submit Responses')
           )
     )
   )
